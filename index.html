@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Comunicação IPC</title>
+    <meta charset="UTF-8">
+</head>
+<body style="color: green;">
+    <h1>Mensagens do IPC:</h1>
+    <p id="async-message"></p>
+    <p id="sync-message"></p>
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        // Enviar mensagem assíncrona para o main.js
+        ipcRenderer.send('async-message', 'Async do renderer para o main');
+
+        //escutador do processo assincrono
+        ipcRenderer.on('display-async-message', (event, message) => {
+            // Exibir a mensagem na interface do usuário
+            const asyncMessageElement = document.getElementById('async-message');
+            asyncMessageElement.textContent = `Resposta assíncrona: ${message}`;
+        });
+
+
+        // Enviar mensagem síncrona para o main.js
+        const syncResponse = ipcRenderer.sendSync('sync-message', 'Sync do renderer para o main');
+        document.getElementById('sync-message').textContent = `${syncResponse}`;
+    </script>
+</body>
+</html>
+
